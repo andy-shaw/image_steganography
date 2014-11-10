@@ -40,7 +40,7 @@ if __name__ == '__main__':
     i = 0
     f = open('encoding_source.txt', 'w')
     for ch in ordering:
-        f.write(repr(ch))
+        f.write(repr(ch) + ',')
         if i % columns == 0:
             f.write('\n')
         i += 1

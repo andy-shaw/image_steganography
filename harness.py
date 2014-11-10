@@ -19,7 +19,7 @@ text = receiver.receive('images\\source.png')
 
 
 print 'Message:\n' + '-'*45
-if len(text) > 1000:
+if len(text) > 2000:
     print text[:2000]
 else:
     print text
