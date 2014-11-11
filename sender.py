@@ -1,31 +1,15 @@
 from pprint import pprint
 from PIL import Image
 import string
-import binascii
 
 input_file = 'input.txt'
 end_of_message = '%!~'
 stats = True
 input_text = open(input_file).readlines()
 
-h2b = {
-    '0' : '0000',
-    '1' : '0001',
-    '2' : '0010',
-    '3' : '0011',
-    '4' : '0100',
-    '5' : '0101',
-    '6' : '0110',
-    '7' : '0111',
-    '8' : '1000',
-    '9' : '1001',
-    'a' : '1010',
-    'b' : '1011',
-    'c' : '1100',
-    'd' : '1101',
-    'e' : '1110',
-    'f' : '1111',
-}
+def _log(x, message=''):
+    if message != '': message += ':'
+    open('debug.txt', 'a').write(message + x + '\n')
 
 def clean_image(image_name):
     im = Image.open(image_name)
@@ -66,16 +50,14 @@ def put_message(text, image_name):
     compress.create_encoding(compress.create_encoding_source(input_text))
     binary_string = compress.compress(text + end_of_message)
 
-    # place encoding at the head of the string
-    temp = ''
-    for ch in compress.encoding:
-        #use existing tool to convert encoding to hex string
-        temp += binascii.hexlify(ch)
-
+    # header will be binary encoding for each character
+    # ie
+    # spot 1 will be the first in compress.POSSIBLE_CHARACTERS
+    # and binary based on encoding
+    # NOTE: all characters will take up 8 bits, so it is absolute spacing -> needed to parse
     header = ''
-    for ch in temp:
-        #convert hex string to binary
-        header += h2b[ch]
+    for ch in compress.POSSIBLE_CHARACTERS:
+        header += compress.encoding[ch].rjust(8, '0')
 
     binary_string = header + binary_string
 
@@ -90,8 +72,6 @@ def put_message(text, image_name):
         print 'Compressed {0} bits to {1}'.format(len_full, len_bin)
         print 'Compression ratio is {0}%'.format(round(100 * compression_ratio(len_bin, len_full), 5))
         print 'Need {0} pixels to send {1} bits'.format(len(binary_string)/3, len(binary_string))
-
-
 
     #place binary in last position for each RGB value for each pixel
     #placement is linear

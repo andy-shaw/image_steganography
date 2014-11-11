@@ -1,29 +1,13 @@
 from PIL import Image
 import string
-import binascii
 
 end_of_message = '%!~'
 input_text = open('input.txt').readlines()
 input_text.extend([end_of_message])
 
-b2h = {
-    '0000' : '0',
-    '0001' : '1',
-    '0010' : '2',
-    '0011' : '3',
-    '0100' : '4',
-    '0101' : '5',
-    '0110' : '6',
-    '0111' : '7',
-    '1000' : '8',
-    '1001' : '9',
-    '1010' : 'a',
-    '1011' : 'b',
-    '1100' : 'c',
-    '1101' : 'd',
-    '1110' : 'e',
-    '1111' : 'f',
-}
+def _log(x, message=''):
+    if message != '': message += ':'
+    open('debug.txt', 'a').write(message + x + '\n')
 
 def retrieve_message(image_name):
     import compress
@@ -55,19 +39,24 @@ def retrieve_message(image_name):
                 binary_string += '0'
 
 
-    #encoding is in the first 800 bits and contains all of string.printable
+    #encoding is in the first 800 bits and contains all of compress.POSSIBLE_CHARACTERS
     header = binary_string[:800]
 
-    binary_string = binary_string
+    binary_string = binary_string[800:]
 
-    temp = ''
-    for i in range(0, 800, 4):
-        temp += b2h[header[i:i+4]]
+    # each byte of header contains the encoding for the character
+    # in order of compress.POSSIBLE_CHARACTERS
+    temp = []
+    i = 0
+    for ch in compress.POSSIBLE_CHARACTERS:
+        temp.append((header[i:i+8], ch))
+        i += 8
 
-    s = binascii.unhexlify(temp)
+    # sorted binary puts them in order of encoding
+    # creating list so that source_encoding meets the compress encoding parameter reqs
     source_encoding = []
-    for ch in s:
-        source_encoding.append(ch)
+    for x,y in sorted(temp):
+        source_encoding.append(y)
 
     compress.create_encoding(source_list=source_encoding)
 

@@ -1,4 +1,9 @@
-Hello world.
+This is a bunch of sample text.
+I thinaaAsroiaer AWEOAIWJ anksdrf&*@(*(#!
+!Y!*#
+//awer[a[asdf;'asdf//*-/89+95+']]
+aerajsr
+HREO))
 
 
-You know, something simple
+As long as it's in string.printable, it'll come up!
