@@ -23,17 +23,17 @@ def retrieve_message(image_name):
         for y in range(w):
             r,g,b = im.getpixel((x,y))
 
-            if r%2 == 1: 
+            if r%2 == 1:
                 binary_string += '1'
             else:
                 binary_string += '0'
 
-            if g%2 == 1: 
+            if g%2 == 1:
                 binary_string += '1'
             else:
                 binary_string += '0'
 
-            if b%2 == 1: 
+            if b%2 == 1:
                 binary_string += '1'
             else:
                 binary_string += '0'
@@ -85,25 +85,34 @@ def shred_message(image_name):
             r = (r/2)*2
             g = (g/2)*2
             b = (b/2)*2
-            
+
             im.putpixel((x,y), (r,g,b))
 
     im.save(image_name)
 
     im.close()
 
-def receive(image_name):
+def receive(image_name, filename=None):
     message = retrieve_message(image_name)
-    #shred_message(image_name)
+    shred_message(image_name)
+
+    if filename:
+        open(filename, 'w').write(message)
 
     return message
 
 if __name__ == '__main__':
     import sys
-    args = sys.argv[1:]
-    
-    if len(args) <= 0:
-        print 'USAGE: python receiver.py <image_name>'
-        exit()
+    import argparse
 
-    print receive(args[0])
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--image', help='Image to extract message from', required=True)
+    parser.add_argument('-o', '--output', help='Output file', required=False)
+    args = vars(parser.parse_args())
+
+    if args['output']:
+        filename = args['output']
+        receive(args['image'], filename)
+    else:
+        filename = None
+        print receive(args['image'], filename)
