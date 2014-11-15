@@ -98,7 +98,6 @@ def receive(image_name, filename=None):
 
     if filename:
         open(filename, 'w').write(message)
-
     return message
 
 if __name__ == '__main__':

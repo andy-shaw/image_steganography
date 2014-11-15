@@ -4,7 +4,7 @@ import string
 
 input_file = 'input.txt'
 end_of_message = '%!~'
-stats = True
+stats = False
 input_text = open(input_file).readlines()
 
 def _log(x, message=''):
@@ -106,15 +106,19 @@ def put_message(text, image_name):
 
 def send(image_name, message):
     clean_image(image_name)
-    put_message(message, image_name)
+    put_message(text=message, image_name=image_name)
 
 if __name__ == '__main__':
     import sys
-    args = sys.argv[1:]
-    
-    if len(args) <= 0:
-        print 'USAGE: python sender.py <image_name>'
-        exit()
+    import argparse
 
-    # send(image_name=args[0], message='TEST')
-    send(image_name=args[0], message=''.join(open('input.txt').readlines()))
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--image', help='Image to extract message from', required=True)
+    parser.add_argument('-v', '--verbose', help='Verbose output', action='store_true')
+    parser.add_argument('-s', '--source', help='Source text file', required=True)
+    args = vars(parser.parse_args())
+
+    if args['verbose']: stats = True
+
+    message = ''.join(open(args['source']).readlines())    
+    send(args['image'], message)

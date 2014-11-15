@@ -3,6 +3,8 @@ import string
 
 message = open('input.txt').readlines()
 
+sender.stats = True
+
 #clean input of unicode only characters
 for i in range(len(message)):
     ch = 0
