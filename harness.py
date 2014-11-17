@@ -20,10 +20,12 @@ print '\nMessage placed, now retrieving\n'
 text = receiver.receive('images\\source.png')
 
 
-print 'Message:\n' + '-'*45
-if len(text) > 2000:
-    print text[:2000]
+
+if len(text) > 500:
+    print 'Message Excerpt:\n' + '-'*45
+    print text[:500]
 else:
+    print 'Message:\n' + '-'*45
     print text
 print '-'*45
 print 'Message Correctly Transferred:', text==''.join(message)
