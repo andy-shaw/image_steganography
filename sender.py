@@ -1,6 +1,7 @@
 from pprint import pprint
 from PIL import Image
 import string
+from math import ceil
 
 input_file = 'input.txt'
 end_of_message = '%!~'
@@ -71,7 +72,7 @@ def put_message(text, image_name):
         print 'Overhead of {0} bits required to send the encoding'.format(len(string.printable) * 8)
         print 'Compressed {0} bits to {1}'.format(len_full, len_bin)
         print 'Compression ratio is {0}%'.format(round(100 * compression_ratio(len_bin, len_full), 5))
-        print 'Need {0} pixels to send {1} bits'.format(len(binary_string)/3, len(binary_string))
+        print 'Need {0} pixels to send {1} bits'.format(int(ceil(len(binary_string)/3)), len(binary_string))
 
     #place binary in last position for each RGB value for each pixel
     #placement is linear
@@ -82,7 +83,7 @@ def put_message(text, image_name):
     if stats: print l * w, 'pixels are available for use'
 
     #check to make sure image can fit message
-    if l * w < len(binary_string)/3 + 1:
+    if l * w < int(ceil(len(binary_string)/3)):
         print 'Cannot send message in this image.  Need a larger image'
         im.close()
         exit()
