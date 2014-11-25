@@ -1,7 +1,22 @@
 import sender, receiver
 import string
 
-message = open('input.txt').readlines()
+image_file = 'images\\source.png'
+
+try:
+    message = open('input.txt').readlines()
+except:
+    print 'Unable to open input.txt'
+    exit()
+
+try:
+    pic = open(image_file)
+except:
+    print 'Unable to open picture'
+    exit()
+
+print 'Input text from "input.txt"'
+print 'Input image from "images/source.png"'
 
 sender.stats = True
 
@@ -13,11 +28,11 @@ for i in range(len(message)):
             message[i] = message[i][:ch] + message[i][ch+1:]
         ch += 1
 
-sender.send('images\\source.png', ''.join(message))
+sender.send(image_file, ''.join(message))
 
 print '\nMessage placed, now retrieving\n'
 
-text = receiver.receive('images\\source.png')
+text = receiver.receive(image_file)
 
 
 
